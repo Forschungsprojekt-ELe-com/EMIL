@@ -2,8 +2,7 @@ import sys
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from app.api.ai_service import ai_service
+from api.ai_service import ai_service
 
 app = FastAPI()
 

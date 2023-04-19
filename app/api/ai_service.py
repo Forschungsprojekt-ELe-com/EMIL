@@ -1,5 +1,6 @@
 from fastapi import APIRouter
-from app.ai_model import ai_prediction_model
+from ai_model import ai_prediction_model
+import api.db_manager
 
 # add to APIRouter
 ai_service = APIRouter()

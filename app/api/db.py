@@ -6,10 +6,10 @@ USER = os.getenv('MONGODB_USER')
 PASSWORD = os.getenv('MONGODB_PASS')
 
 # mongodb database URI
-DATABASE_URI = "mongodb://{user}:{password}@mongodb:27017".format(user=USER, password=PASSWORD)
+DATABASE_URI = "mongodb://127.0.0.1:27017"
 
 
 client = motor.motor_asyncio.AsyncIOMotorClient(DATABASE_URI)
 
 # database collections
-db_XAPI = client.XAPI
+db_XAPI = client.learninglocker_v2
