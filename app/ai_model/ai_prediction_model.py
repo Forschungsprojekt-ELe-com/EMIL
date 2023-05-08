@@ -4,5 +4,5 @@
 import pandas as pd
 
 
-def recommendation():
+def recommendation(statements):
     return "recommendation"
