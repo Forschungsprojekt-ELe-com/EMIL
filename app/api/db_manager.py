@@ -1,7 +1,7 @@
 from api.db import db_XAPI
 import asyncio
 
-# get game performance model
+# get XAPI statement
 async def get_statement():
     async for document in db_XAPI["statements"].find():
         print(document)
