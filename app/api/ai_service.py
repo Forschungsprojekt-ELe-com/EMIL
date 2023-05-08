@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from ai_model import ai_prediction_model
-import api.db_manager
+from api import db_manager
 
 # add to APIRouter
 ai_service = APIRouter()
@@ -9,7 +9,8 @@ ai_service = APIRouter()
 # get all game performance model data
 @ai_service.get("/")
 async def get_game_performance_model():
-    return "aiservice is running"
+    result = await db_manager.get_statement()
+    return result
 
 
 # get prediction values

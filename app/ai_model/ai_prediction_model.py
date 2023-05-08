@@ -1,5 +1,5 @@
-from surprise import KNNWithMeans
-from surprise import Reader, Dataset
+#from surprise import KNNWithMeans
+#from surprise import Reader, Dataset
 
 import pandas as pd
 
