@@ -50,7 +50,7 @@ def get_top_titles_and_categories(df, movie_indices):
     return result_df
 
 
-def get_recommendations(title, level, n, cosine_sim=similarity):
+def get_recommendations(title, level, n, done_list_ref_id, cosine_sim=similarity):
 
  # get the index of the item that matches the title
     item_index = df[(df.ref_id1 == item_name) |
@@ -81,7 +81,7 @@ def get_recommendations(title, level, n, cosine_sim=similarity):
     result_df = result_df[~result_df['ref_id1'].isin(done_list_ref_id) &
                       ~result_df['ref_id2'].isin(done_list_ref_id) &
                       ~result_df['ref_id3'].isin(done_list_ref_id)]
-    print(result_df)
+    # print(result_df)
     return result_df, sim_scores_all
 
 
@@ -89,9 +89,9 @@ def get_recommendations(title, level, n, cosine_sim=similarity):
 item_name = 629 #ref_id
 number_of_recommendations = 20
 level = 2
-done_list_ref_id = [644,633, 655]
+# done_list_ref_id = [644,633,655]
 
-result_df, _ = get_recommendations(item_name, level, number_of_recommendations)
+# result_df, _ = get_recommendations(item_name, level, number_of_recommendations)
 #get_recommendations(movie_name, level, number_of_recommendations)
 
 
