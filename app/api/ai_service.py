@@ -12,7 +12,7 @@ from model.EMIL import EMIL
 ai_service = APIRouter()
 
 
-# get all game performance model data
+# Recommendation endpoint
 @ai_service.post("/")
 async def get_recommendation(lena: LENA):
     if lena.user_id:
@@ -21,7 +21,6 @@ async def get_recommendation(lena: LENA):
     done_MLE = await db_manager.get_done_MLE(user_id)
     df = ai_prediction_model.recommendation(ref_id, done_MLE)
     recommendation = df["ref_id1"].tolist()
-    print(recommendation)
 
     emil = EMIL()
     emil.MLE_ref_id = recommendation
