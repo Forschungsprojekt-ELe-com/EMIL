@@ -1,5 +1,5 @@
 import sys
-
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.ai_service import ai_service
@@ -33,3 +33,7 @@ def hello():
 
 
 app.include_router(ai_service, prefix='/aiservice', tags=['aiservice'])
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", port=8000, log_level="info")
