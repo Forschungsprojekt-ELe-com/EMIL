@@ -21,14 +21,14 @@ async def get_recommendation(user_id: int, count_recommendation: int):
     recommendation = df["ref_id1"].tolist()
 
     emil = EMIL()
-    emil.data.MLE_ref_id = recommendation
+    emil.data.MLE_ref_id = recommendation[:count_recommendation]
     emil.data.recommendation_reason = "1"
 
-    # concert timestamp format
+    # convert timestamp format
     timestamp = time.time()
     dt = datetime.datetime.fromtimestamp(timestamp)
     formatted_datetime = dt.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
-    emil.transmitted_at = formatted_datetime
+    emil.meta.transmitted_at = formatted_datetime
 
     return emil
 
