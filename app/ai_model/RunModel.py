@@ -5,18 +5,24 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import joblib
 import pandas as pd
-import os
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
+
+# Get current absolute path
+current_script_path = os.path.abspath(__file__)
+current_script_directory = os.path.dirname(current_script_path)
+
 
 # Load the model
-tfidf_loaded = joblib.load('ai_model/tfidf_model.pkl')
+tfidf_path = os.path.join(current_script_directory, "tfidf_model.pkl")
+tfidf_loaded = joblib.load(tfidf_path)
 
 
 # In[12]:
 
-
-df = pd.read_pickle('ai_model/my_dataframe.pkl')
+dataframe_path = os.path.join(current_script_directory, "my_dataframe.pkl")
+df = pd.read_pickle(dataframe_path)
 
 
 # In[13]:
