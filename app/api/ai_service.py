@@ -21,7 +21,8 @@ async def get_recommendation(user_id: int, count_recommendation: int):
     recommendation = df["ref_id1"].tolist()
 
     emil = EMIL()
-    emil.data.MLE_ref_id = recommendation[:count_recommendation]
+    filtered_recommendation = recommendation[:count_recommendation]
+    emil.data.MLE_ref_id = filtered_recommendation
     emil.data.recommendation_reason = "1"
 
     # convert timestamp format
