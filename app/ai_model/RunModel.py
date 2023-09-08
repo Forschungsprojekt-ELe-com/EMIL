@@ -13,17 +13,14 @@ import os
 current_script_path = os.path.abspath(__file__)
 current_script_directory = os.path.dirname(current_script_path)
 
-
 # Load the model
 tfidf_path = os.path.join(current_script_directory, "tfidf_model.pkl")
 tfidf_loaded = joblib.load(tfidf_path)
-
 
 # In[12]:
 
 dataframe_path = os.path.join(current_script_directory, "my_dataframe.pkl")
 df = pd.read_pickle(dataframe_path)
-
 
 # In[13]:
 
@@ -37,6 +34,7 @@ similarity = cosine_similarity(tfidf_loaded)
 
 # create a function that takes in movie title as input and returns a list of the most similar movies
 
+# get Data from DataFrame
 def get_top_titles_and_categories(df, movie_indices, mediaPref):
     # extract the 'subtitle' and 'category' columns from the DataFrame
     top_titles_df = pd.DataFrame(df.iloc[movie_indices]['subtitle'])
@@ -44,22 +42,28 @@ def get_top_titles_and_categories(df, movie_indices, mediaPref):
     top_ref_id_df = pd.DataFrame(df.iloc[movie_indices][f'ref_id{mediaPref}'])
     top_obj_id_df = pd.DataFrame(df.iloc[movie_indices][f'obj_id{mediaPref}'])
 
-
     # concatenate the data frames horizontally
     result_df = pd.concat([top_titles_df, top_categories_df, top_ref_id_df, top_obj_id_df], axis=1)
 
     return result_df
 
 
-def get_recommendations(item_name, mediaPref,  level, n, done_list_ref_id, cosine_sim=similarity):
-
+def get_recommendations(item_name, mediaPref, level, n, done_list_ref_id, cosine_sim=similarity):
     # If 'item_name' is None, select a random 'item_index' where 'level' equals 'category'
-    if item_name is None:
+    if not done_list_ref_id:
         item_index = df[df.category == level].sample(1).index.tolist()
     else:
-        item_index = df[df[f'ref_id{mediaPref}'] == item_name].index.tolist()
-    print(item_index)
+        # get the index of the item that matches the title
 
+        #        item_index = df[(df.ref_id1 == item_name) |
+        #                          (df.ref_id2 == item_name) |
+        #                          (df.ref_id3 == item_name)].index.tolist()
+        # get the index of the item that matches the title
+        # item_index = df[df[f'ref_id{mediaPref}'] == item_name].index.tolist() #for ref_id
+        #################item_index = df[df[f'obj_id{mediaPref}'] == item_name].index.tolist()
+        item_index = df[(df[f'obj_id1'] == item_name) |
+                        (df[f'obj_id2'] == item_name) |
+                        (df[f'obj_id3'] == item_name)].index.tolist()
 
     # get the pairwsie similarity scores of all movies with that movie and sort the movies based on the similarity scores
     # sim_scores_all = sorted(list(enumerate(cosine_sim[item_index])), key=lambda x: x[1], reverse=True)[1:]
@@ -77,28 +81,33 @@ def get_recommendations(item_name, mediaPref,  level, n, done_list_ref_id, cosin
     result_df['sim_scores'] = scores
     result_df['ranking'] = range(1, len(result_df) + 1)
 
-
     done_list_ref_idComplete = get_id_info(df, done_list_ref_id)
 
-    #filtering by level
+    # filtering by level
     if level < 3:
         result_df = result_df.loc[df['category'] == level, :]
 
-    result_df = result_df[~result_df[f'ref_id{mediaPref}'].isin(done_list_ref_idComplete)]
+    # Remove rows from the result DataFrame where ref_id is found in any of the ref_id columns
+    # result_df = result_df[~result_df['ref_id1'].isin(done_list_ref_id) &
+    #                  ~result_df['ref_id2'].isin(done_list_ref_id) &
+    #                  ~result_df['ref_id3'].isin(done_list_ref_id)]
+    # result_df = result_df[~result_df[f'ref_id{mediaPref}'].isin(done_list_ref_idComplete)] # for ref_id
+    result_df = result_df[~result_df[f'obj_id{mediaPref}'].isin(done_list_ref_idComplete)]
 
     # If len of result_df is less than 5, grab results from level 3
     # If len of result_df is less than 5, increment level by 1 and grab results until level 3
     while len(result_df) < 5 and level < 3:
         level += 1
-        additional_result_df, additional_sim_scores_all = get_recommendations(item_name, mediaPref,  level, n, done_list_ref_idComplete, cosine_sim)
+        additional_result_df, additional_sim_scores_all = get_recommendations(item_name, mediaPref, level, n,
+                                                                              done_list_ref_idComplete, cosine_sim)
         result_df = pd.concat([result_df, additional_result_df])
         sim_scores_all += additional_sim_scores_all
 
     # sort the DataFrame by 'sim_scores' in descending order
     result_df = result_df.sort_values(by='sim_scores', ascending=False)
 
-    print(result_df)
     return result_df, sim_scores_all
+
 
 def get_id_info(df, done_list_ref_id):
     # Columns we are interested in
@@ -112,30 +121,4 @@ def get_id_info(df, done_list_ref_id):
         result_info = pd.concat([result_info, id_df], ignore_index=True)
     # Flatten the DataFrame into a list
     result_list = result_info.values.flatten().tolist()
-    print(result_list)
     return result_list
-
-
-# visualize the results
-def show_results(movie_name, top_titles_df):
-    movie_index = df[df.itemId==movie_name].subtitle
-    top_titles_df = top_titles_df.sort_values(by='sim_scores', ascending=False)
-    fix, ax = plt.subplots(figsize=(11, 5))
-    sns.barplot(data=top_titles_df, y='subtitle', x= 'sim_scores', color='blue')
-    plt.xlim((0,1))
-    plt.title(f'Top 15 recommendations for {movie_index}')
-    pct_values = ['{:.2}'.format(elm) for elm in list(top_titles_df['sim_scores'])]
-    ax.bar_label(container=ax.containers[0], labels=pct_values, size=12)
-
-# generate a list of recommendations for a specific movie title
-mediaPref = 1 #1--> Audio / 2-->Text / 3-->Video
-item_name = 647 #ref_id of latest interaction
-number_of_recommendations = 20
-level = 2
-done_list_ref_id = [633, 655, 635, 626, 650, 671, 665, 668, 647]
-
-# result_df, _ = get_recommendations(item_name, level, number_of_recommendations)
-#get_recommendations(movie_name, level, number_of_recommendations)
-
-
-
