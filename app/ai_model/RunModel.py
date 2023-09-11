@@ -34,7 +34,9 @@ similarity = cosine_similarity(tfidf_loaded)
 
 # create a function that takes in movie title as input and returns a list of the most similar movies
 
-# get Data from DataFrame
+# create a function that takes in movie title as input and returns a list of the most similar movies
+
+#get Data from DataFrame
 def get_top_titles_and_categories(df, movie_indices, mediaPref):
     # extract the 'subtitle' and 'category' columns from the DataFrame
     top_titles_df = pd.DataFrame(df.iloc[movie_indices]['subtitle'])
@@ -48,7 +50,8 @@ def get_top_titles_and_categories(df, movie_indices, mediaPref):
     return result_df
 
 
-def get_recommendations(item_name, mediaPref, level, n, done_list_ref_id, cosine_sim=similarity):
+def get_recommendations(item_name, mediaPref,  level, n, done_list_ref_id, cosine_sim=similarity):
+
     # If 'item_name' is None, select a random 'item_index' where 'level' equals 'category'
     if not done_list_ref_id:
         item_index = df[df.category == level].sample(1).index.tolist()
@@ -59,14 +62,14 @@ def get_recommendations(item_name, mediaPref, level, n, done_list_ref_id, cosine
         #                          (df.ref_id2 == item_name) |
         #                          (df.ref_id3 == item_name)].index.tolist()
         # get the index of the item that matches the title
-        # item_index = df[df[f'ref_id{mediaPref}'] == item_name].index.tolist() #for ref_id
+        #item_index = df[df[f'ref_id{mediaPref}'] == item_name].index.tolist() #for ref_id
         #################item_index = df[df[f'obj_id{mediaPref}'] == item_name].index.tolist()
         item_index = df[(df[f'obj_id1'] == item_name) |
                         (df[f'obj_id2'] == item_name) |
                         (df[f'obj_id3'] == item_name)].index.tolist()
 
     # get the pairwsie similarity scores of all movies with that movie and sort the movies based on the similarity scores
-    # sim_scores_all = sorted(list(enumerate(cosine_sim[item_index])), key=lambda x: x[1], reverse=True)[1:]
+    #sim_scores_all = sorted(list(enumerate(cosine_sim[item_index])), key=lambda x: x[1], reverse=True)[1:]
     # will be always only one single value in the list xxxxD
     sim_scores_all = []
     for item_index in item_index:
@@ -83,12 +86,12 @@ def get_recommendations(item_name, mediaPref, level, n, done_list_ref_id, cosine
 
     done_list_ref_idComplete = get_id_info(df, done_list_ref_id)
 
-    # filtering by level
+    #filtering by level
     if level < 3:
         result_df = result_df.loc[df['category'] == level, :]
 
     # Remove rows from the result DataFrame where ref_id is found in any of the ref_id columns
-    # result_df = result_df[~result_df['ref_id1'].isin(done_list_ref_id) &
+    #result_df = result_df[~result_df['ref_id1'].isin(done_list_ref_id) &
     #                  ~result_df['ref_id2'].isin(done_list_ref_id) &
     #                  ~result_df['ref_id3'].isin(done_list_ref_id)]
     # result_df = result_df[~result_df[f'ref_id{mediaPref}'].isin(done_list_ref_idComplete)] # for ref_id
@@ -98,8 +101,7 @@ def get_recommendations(item_name, mediaPref, level, n, done_list_ref_id, cosine
     # If len of result_df is less than 5, increment level by 1 and grab results until level 3
     while len(result_df) < 5 and level < 3:
         level += 1
-        additional_result_df, additional_sim_scores_all = get_recommendations(item_name, mediaPref, level, n,
-                                                                              done_list_ref_idComplete, cosine_sim)
+        additional_result_df, additional_sim_scores_all = get_recommendations(item_name, mediaPref,  level, n, done_list_ref_idComplete, cosine_sim)
         result_df = pd.concat([result_df, additional_result_df])
         sim_scores_all += additional_sim_scores_all
 
@@ -107,7 +109,6 @@ def get_recommendations(item_name, mediaPref, level, n, done_list_ref_id, cosine
     result_df = result_df.sort_values(by='sim_scores', ascending=False)
 
     return result_df, sim_scores_all
-
 
 def get_id_info(df, done_list_ref_id):
     # Columns we are interested in
