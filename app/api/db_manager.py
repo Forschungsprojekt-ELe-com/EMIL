@@ -21,15 +21,14 @@ async def get_done_MLE(user_id):
     done_MLE = []
     result = db_XAPI["statements"].find(query, filter_keys).sort([['_id', -1]])
     async for document in result:
-        ref_id = extract_ref_id(document["statement"]["object"]["id"])
-        done_MLE.append(ref_id)
+        obj_id = extract_obj_id(document["statement"]["object"]["id"])
+        done_MLE.append(int(obj_id[0]))
+    done_MLE.reverse()
     return done_MLE
 
 
-def extract_ref_id(url):
+def extract_obj_id(url):
     parsed_url = urlparse(url)
     query_params = parse_qs(parsed_url.query)
-    copa = query_params.get('target', [None])[0]
-    if copa is not None and copa.startswith('copa_'):
-        ref_id = copa.split('_')[1]
-    return ref_id
+    obj_id = query_params.get('obj_id_lrs')
+    return obj_id
