@@ -19,6 +19,7 @@ async def get_recommendation(user_id: int, count_recommendation: int):
     recommendation = []
 
     done_MLE = await db_manager.get_done_MLE(user_id)
+
     if not done_MLE:
         emil.meta.error = "user_id not found or no user data"
         emil.data.recommendation_reason = "Aufgrund Ihrer aktuellen Einstellungen schlage ich Ihnen folgendes vor:"
