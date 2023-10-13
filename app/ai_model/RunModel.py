@@ -92,8 +92,7 @@ def get_id_info(df, done_list_ref_id):
         # For each ID, get rows where the ID is found in the columns of interest
         id_df = df[df[columns].apply(lambda row: id_value in row.values, axis=1)][columns]
         result_info = pd.concat([result_info, id_df], ignore_index=True)
-    # Flatten the DataFrame into a list
-    result_list = result_info.values.flatten().tolist()
+    result_list = result_info.dropna()
     return result_list
 
 
