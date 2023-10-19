@@ -8,8 +8,6 @@ def recommendation(done_MLE, preference):
     media_pref = (preference[0] or 0)+1 #1--> Audio / 2-->Text / 3-->Video
     level = (preference[1] or 0)+1
 
-    print(media_pref, level)
-
     # Get recommendations using AI model
     recommendations, _ = RunModel.get_recommendations(media_pref, level, number_of_recommendation, done_MLE)
     return recommendations
