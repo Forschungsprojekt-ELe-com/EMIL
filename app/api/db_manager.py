@@ -50,11 +50,15 @@ async def get_preference(user_id):
     # Condition
     condition_user_id = {"statement.actor.account.name": re.compile(f"^{user_id}")}
     condition_en_answered = {"statement.verb.display.en-US": "answered"}
+    condition_de_answered = {"statement.verb.display.de-DE": "answered"}
     condition_test_obj = {"statement.object.id": re.compile(f"{test_obj_id}$")}
 
     query = {
         '$and': [
-            condition_user_id, condition_en_answered, condition_test_obj
+            {
+                '$or': [condition_en_answered, condition_de_answered]
+            },
+            condition_user_id,  condition_test_obj
         ]
     }
 
