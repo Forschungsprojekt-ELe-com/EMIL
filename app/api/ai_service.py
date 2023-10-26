@@ -14,6 +14,7 @@ ai_service = APIRouter()
 # Add HTTP Basic Auth
 security = HTTPBasic()
 
+
 # Recommendation endpoint
 @ai_service.get("/{user_id}/{count_recommendation}")
 # async def get_recommendation(user_id: int, count_recommendation: int, credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
@@ -30,7 +31,7 @@ async def get_recommendation(user_id: int, count_recommendation: int):
     done_MLE = await db_manager.get_done_MLE(user_id)
     # Check if user exist in LRS
     user_exist = await db_manager.check_user(user_id)
-    user_preference = await db_manager.get_preference(user_id)
+    user_preference = await get_preference(user_id)
 
     # If there are obj_ids in done_MLE list, get recommendation using AI model
     if done_MLE:
@@ -58,3 +59,10 @@ async def get_recommendation(user_id: int, count_recommendation: int):
     emil.meta.transmitted_at = formatted_datetime
 
     return emil
+
+
+async def get_preference(user_id):
+    user_preference = await db_manager.get_preference(user_id, 1224)
+    if len(user_preference) < 3:
+        user_preference = await db_manager.get_preference(user_id, 1813)
+    return user_preference

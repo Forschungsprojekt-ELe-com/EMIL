@@ -43,9 +43,7 @@ async def check_user(user_id):
     return attempted_MLE
 
 
-async def get_preference(user_id):
-
-    test_obj_id = 1813
+async def get_preference(user_id, test_obj_id):
 
     # Condition
     condition_user_id = {"statement.actor.account.name": re.compile(f"^{user_id}")}
