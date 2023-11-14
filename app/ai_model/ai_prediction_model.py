@@ -6,8 +6,7 @@ from ai_model import RunModel
 
 def recommendation(done_MLE, preference):
     number_of_recommendation = 20
-
-    if preference and len(preference) >= 3:
+    if preference and len(preference) == 2:
 
         # map media preference value
         media_preference_list = preference[0::3]
