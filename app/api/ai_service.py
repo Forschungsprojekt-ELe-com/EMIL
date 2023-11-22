@@ -33,11 +33,13 @@ async def get_recommendation(user_id: int, count_recommendation: int):
     user_exist = await db_manager.check_user(user_id)
     user_preference = await get_preference(user_id)
 
+    # get recommendations
+    df = ai_prediction_model.recommendation(done_MLE, user_preference)
+    obj_id_column = [col for col in df.columns if col.startswith('obj_id')]
+    recommendation = df[obj_id_column[0]].dropna().tolist()
+
     # If there are obj_ids in done_MLE list, get recommendation using AI model
     if done_MLE:
-        df = ai_prediction_model.recommendation(done_MLE, user_preference)
-        obj_id_column = [col for col in df.columns if col.startswith('obj_id')]
-        recommendation = df[obj_id_column[0]].dropna().tolist()
         emil.data.recommendation_reason = "Abgestimmt auf Ihre bisherige Auswahl schlage ich vor:"
 
     # If there is no obj_ids, check if the user_id exist in the LRS.
