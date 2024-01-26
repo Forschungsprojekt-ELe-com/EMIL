@@ -9,7 +9,7 @@ TEST_OBJ_ID = "https://elecom.qualitus.net/goto.php?target=copa_1649&client_id=e
 async def get_done_MLE(user_id):
     condition_de_complete = {"statement.verb.display.de-DE": "completed"}
     condition_en_complete = {"statement.verb.display.en-US": "completed"}
-    condition_user_id = {"statement.actor.account.name": re.compile(f"^{user_id}")}
+    condition_user_id = {"statement.actor.account.name": re.compile(f"^{user_id}@")}
     query = {
         '$and': [
             {
@@ -31,7 +31,7 @@ async def get_done_MLE(user_id):
 # Method to check if user has interaction with any MLE
 async def check_user(user_id):
     # Condition
-    condition_user_id = {"statement.actor.account.name": re.compile(f"^{user_id}")}
+    condition_user_id = {"statement.actor.account.name": re.compile(f"^{user_id}@")}
     # Filter result
     filter_keys = {"_id": 0, "statement.object.id": 1}
 
@@ -46,7 +46,7 @@ async def check_user(user_id):
 async def get_preference(user_id, test_obj_id):
 
     # Condition
-    condition_user_id = {"statement.actor.account.name": re.compile(f"^{user_id}")}
+    condition_user_id = {"statement.actor.account.name": re.compile(f"^{user_id}@")}
     condition_en_answered = {"statement.verb.display.en-US": "answered"}
     condition_de_answered = {"statement.verb.display.de-DE": "answered"}
     condition_test_obj = {"statement.object.id": re.compile(f"{test_obj_id}$")}
