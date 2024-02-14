@@ -44,7 +44,46 @@ async def check_user(user_id):
 
 
 async def get_preference(user_id, test_obj_id):
+    DESCRIPTION = ["Lernformat", "Vorwissen"]
 
+    combined_preference = []
+
+    submit_time = await get_submit_time(user_id, test_obj_id)
+
+    for desc in DESCRIPTION:
+        # Conditions
+        condition_user_id = {"statement.actor.account.name": re.compile(f"^{user_id}")}
+        condition_en_answered = {"statement.verb.display.en-US": "interacted"}
+        condition_de_answered = {"statement.verb.display.de-DE": "interacted"}
+        condition_test_obj = {"statement.object.id": re.compile(f"{test_obj_id}$")}
+        condition_question_description = {"statement.object.definition.name.de-DE": re.compile(f".*{desc}.*")}
+        condition_submit_time = {"timestamp": {"$lt": submit_time}}
+
+        query = {
+            '$and': [
+                {
+                    '$or': [condition_en_answered, condition_de_answered]
+                },
+                condition_user_id,  condition_test_obj, condition_question_description, condition_submit_time
+            ]
+        }
+
+        # Filter result
+        filter_keys = {"_id": 0, "statement.result.response": 1}
+
+        preference = []
+
+        result = db_XAPI["statements"].find(query, filter_keys)
+        async for document in result:
+            obj_id = document["statement"]["result"]["response"]
+            preference.append(int(obj_id[0]))
+        if preference:
+            combined_preference.append(preference[-1])
+    return combined_preference
+
+
+# Get the latest submit time
+async def get_submit_time(user_id, test_obj_id):
     # Condition
     condition_user_id = {"statement.actor.account.name": re.compile(f"^{user_id}@")}
     condition_en_answered = {"statement.verb.display.en-US": "answered"}
@@ -56,20 +95,20 @@ async def get_preference(user_id, test_obj_id):
             {
                 '$or': [condition_en_answered, condition_de_answered]
             },
-            condition_user_id,  condition_test_obj
+            condition_user_id, condition_test_obj
         ]
     }
 
     # Filter result
-    filter_keys = {"_id": 0, "statement.result.response": 1}
+    filter_keys = {"_id": 0, "timestamp": 1}
 
-    preference = []
+    submit_time = []
 
     result = db_XAPI["statements"].find(query, filter_keys)
     async for document in result:
-        obj_id = document["statement"]["result"]["response"]
-        preference.append(int(obj_id[0]))
-    return preference
+        datetime = document["timestamp"]
+        submit_time.append(datetime)
+    return submit_time[-1]
 
 
 def extract_obj_id(url):

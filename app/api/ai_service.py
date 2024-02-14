@@ -64,7 +64,12 @@ async def get_recommendation(user_id: int, count_recommendation: int):
 
 
 async def get_preference(user_id):
-    user_preference = await db_manager.get_preference(user_id, 1224)
-    if len(user_preference) < 3:
-        user_preference = await db_manager.get_preference(user_id, 1813)
+    user_preference = await db_manager.get_preference(user_id, 2078)
+
+    # enable this snippet when have the obj_id of second video.
+    # use the id of the second video above, and the id of the first video below.
+
+    # if len(user_preference) < 3:
+    #     user_preference = await db_manager.get_preference(user_id, 1813)
+
     return user_preference
