@@ -52,7 +52,7 @@ async def get_preference(user_id, test_obj_id):
 
     for desc in DESCRIPTION:
         # Conditions
-        condition_user_id = {"statement.actor.account.name": re.compile(f"^{user_id}")}
+        condition_user_id = {"statement.actor.account.name": re.compile(f"^{user_id}@")}
         condition_en_answered = {"statement.verb.display.en-US": "interacted"}
         condition_de_answered = {"statement.verb.display.de-DE": "interacted"}
         condition_test_obj = {"statement.object.id": re.compile(f"{test_obj_id}$")}
