@@ -31,9 +31,9 @@ def recommendation(done_MLE, preference):
 
 
 def get_recommendation_for_each_pref(level, number_of_recommendation, done_MLE):
-    lesen, _ = RunModel.get_recommendations(2, level, number_of_recommendation, done_MLE)
+    lesen, _ = RunModel.get_recommendations(1, level, number_of_recommendation, done_MLE)
     rec_lesen = filter_rec(lesen)
-    hoeren, _ = RunModel.get_recommendations(1, level, number_of_recommendation, done_MLE)
+    hoeren, _ = RunModel.get_recommendations(2, level, number_of_recommendation, done_MLE)
     rec_hoeren = filter_rec(hoeren)
     sehen, _ = RunModel.get_recommendations(3, level, number_of_recommendation, done_MLE)
     rec_sehen = filter_rec(sehen)
