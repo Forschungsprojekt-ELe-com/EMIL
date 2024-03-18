@@ -34,9 +34,10 @@ async def get_recommendation(user_id: int, count_recommendation: int):
     user_preference = await get_preference(user_id)
 
     # get recommendations
-    df = ai_prediction_model.recommendation(done_MLE, user_preference)
-    obj_id_column = [col for col in df.columns if col.startswith('obj_id')]
-    recommendation = df[obj_id_column[0]].dropna().tolist()
+    # df = ai_prediction_model.recommendation(done_MLE, user_preference)
+    # obj_id_column = [col for col in df.columns if col.startswith('obj_id')]
+    # recommendation = df[obj_id_column[0]].dropna().tolist()
+    recommendation = ai_prediction_model.recommendation(done_MLE, user_preference)
 
     # If there are obj_ids in done_MLE list, get recommendation using AI model
     if done_MLE:
