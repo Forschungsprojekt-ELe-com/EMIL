@@ -3,7 +3,7 @@ import time
 import datetime
 
 from ai_model import ai_prediction_model
-from api import db_manager, data_filtering
+from api import db_manager
 from model.EMIL import EMIL
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from typing_extensions import Annotated
@@ -52,7 +52,7 @@ async def get_recommendation(user_id: int, count_recommendation: int):
         emil.meta.error = "user_id not found or no user data"
 
     # Set the number of recommendations in response body.
-    filtered_recommendation = data_filtering.filter_empty_objects([recommendation[:count_recommendation]])
+    filtered_recommendation = recommendation[:count_recommendation]
     emil.data.MLE_ref_id = filtered_recommendation
 
     # convert timestamp format

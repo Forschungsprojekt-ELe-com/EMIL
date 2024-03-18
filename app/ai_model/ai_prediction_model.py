@@ -3,6 +3,7 @@
 import random
 
 from ai_model import RunModel
+from api import data_filtering
 
 
 def recommendation(done_MLE, preference):
@@ -44,5 +45,6 @@ def get_recommendation_for_each_pref(level, number_of_recommendation, done_MLE):
 def filter_rec(df):
     obj_id_column = [col for col in df.columns if col.startswith('obj_id')]
     rec = df[obj_id_column[0]].dropna().tolist()
-    random.shuffle(rec)
-    return rec
+    rec_filtered = data_filtering.filter_empty_objects(rec)
+    random.shuffle(rec_filtered)
+    return rec_filtered
