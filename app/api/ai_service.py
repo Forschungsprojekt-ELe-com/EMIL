@@ -3,7 +3,7 @@ import time
 import datetime
 
 from ai_model import ai_prediction_model
-from api import db_manager
+from api import db_manager, data_filtering
 from model.EMIL import EMIL
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from typing_extensions import Annotated
