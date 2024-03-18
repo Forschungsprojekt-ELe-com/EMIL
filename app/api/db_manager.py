@@ -102,12 +102,13 @@ async def get_submit_time(user_id, test_obj_id):
     # Filter result
     filter_keys = {"_id": 0, "timestamp": 1}
 
-    submit_time = []
+    submit_time = ["2023-10-26T12:29:41.000000+02:00"]
 
     result = db_XAPI["statements"].find(query, filter_keys)
     async for document in result:
         datetime = document["timestamp"]
         submit_time.append(datetime)
+        print("submit time", submit_time)
     return submit_time[-1]
 
 
