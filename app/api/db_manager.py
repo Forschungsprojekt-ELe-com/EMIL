@@ -3,8 +3,6 @@ from urllib.parse import urlparse, parse_qs
 import re
 
 
-TEST_OBJ_ID = "https://elecom.qualitus.net/goto.php?target=copa_1649&client_id=elecom&h5p_object_id=246&h5p-subContentId=118704d2-f551-4e1e-9f27-752e526dd12d&obj_id_lrs=1813"
-
 # get XAPI statement using query
 async def get_done_MLE(user_id):
     condition_de_complete = {"statement.verb.display.de-DE": "completed"}
