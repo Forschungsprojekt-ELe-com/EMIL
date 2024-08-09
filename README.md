@@ -31,4 +31,4 @@ run command to start server
 ```
 uvicorn main:app --host 0.0.0.0 --port 80
 ```
-go to http://127.0.0.1:8000/docs to check available endpoints and their required parameters.
+go to http://127.0.0.1:80/docs to check available endpoints and their required parameters.
