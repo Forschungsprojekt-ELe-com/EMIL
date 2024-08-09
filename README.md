@@ -5,7 +5,19 @@ Entscheidungsmodul Ilias (Emil)
 project files for Emil backend system
 
 ## Installation
-Firstly, downlaod the project files to your server. Then install required dependencies.
+Firstly, install required build tools for python
+```
+sudo apt update
+sudo apt install -y wget build-essential libssl-dev zlib1g-dev \
+libbz2-dev libreadline-dev libsqlite3-dev
+```
+Then, install python 3.8.12
+```
+wget https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tgz
+tar -xvf Python-3.8.12.tgz
+```
+
+Finally, downlaod the project files to your server and install required dependencies.
 ```
 pip install -r app/requirements.txt
 ```
