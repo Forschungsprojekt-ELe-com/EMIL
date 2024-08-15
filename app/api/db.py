@@ -6,7 +6,7 @@ USER = os.getenv('MONGODB_USER')
 PASSWORD = os.getenv('MONGODB_PASS')
 
 # mongodb database URI
-DATABASE_URI = "mongodb://127.0.0.1:27017"
+DATABASE_URI = "mongodb://localhost:27017"
 
 client = motor.motor_asyncio.AsyncIOMotorClient(DATABASE_URI)
 
